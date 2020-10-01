@@ -58,7 +58,6 @@ target_link_libraries(
 	im_enhance
 		${OpenCV_LIBS}
 		${SUITESPARSE_LIBRARIES}
-		dmumps
 		${MPI_CXX_LIBRARIES}
 )
 

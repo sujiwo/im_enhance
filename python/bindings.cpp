@@ -21,16 +21,15 @@ void im_test()
 
 static PyObject *method_im_test(PyObject *self, PyObject *args)
 {
-//	return Py
 	std::cout << "ICE printout\n";
-	return new PyObject;
+	Py_RETURN_NONE;
 }
 
 
 static PyObject *method_autoAdjustGammaRGB(PyObject *self, PyObject *args)
 {
 	NDArrayConverter cvt;
-
+//	auto x = args->
 }
 
 
