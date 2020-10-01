@@ -23,7 +23,7 @@ static PyObject *method_im_test(PyObject *self, PyObject *args)
 {
 //	return Py
 	std::cout << "ICE printout\n";
-	return NULL;
+	return new PyObject;
 }
 
 
@@ -52,7 +52,7 @@ static PyObject *method_exposureFusion(PyObject *self, PyObject *args)
 }
 
 
-static PyMethodDef IceMethods[] = {
+static PyMethodDef im_enhanceMethods[] = {
     {"im_test", method_im_test, METH_NOARGS, "Test Method"},
 	{"autoAdjustGammaRGB", method_autoAdjustGammaRGB, METH_VARARGS, "Automatic gamma adjusment"},
 	{"multiScaleRetinexCP", method_multiScaleRetinexCP, METH_VARARGS, "Multi-scale Retinex with Color Preservation"},
@@ -63,7 +63,7 @@ static PyMethodDef IceMethods[] = {
 
 
 PyMODINIT_FUNC
-initice(void)
+initim_enhance(void)
 {
-	(void) Py_InitModule("ice", IceMethods);
+	(void) Py_InitModule("im_enhance", im_enhanceMethods);
 }

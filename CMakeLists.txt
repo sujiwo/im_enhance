@@ -8,6 +8,7 @@ set (CMAKE_MODULE_PATH
 		"${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package (OpenCV REQUIRED)
+find_package (PythonInterp REQUIRED)
 find_package (PythonLibs REQUIRED)
 find_package (Eigen3 REQUIRED)
 find_package (OpenMP REQUIRED)
@@ -77,22 +78,35 @@ target_link_libraries(test_ime
 	Boost::filesystem
 )
 
-#install(
-#	FILES src/ying.py
-#	DESTINATION ${CATKIN_GLOBAL_PYTHON_DESTINATION}
-#)
-
 if (catkin_FOUND)
-	
 	add_executable(ime_ros
 		src/ime_ros.cpp)
-	
 	target_link_libraries(ime_ros
 		im_enhance
 		${catkin_LIBRARIES}
 		${SUITESPARSE_LIBRARIES})
-		
 #	catkin_python_setup()
 endif()
 
+# Python extension
+add_library(pyime SHARED
+	python/bindings.cpp
+	python/conversion.cpp
+	)
+target_include_directories(pyime
+	PUBLIC
+		include
+		${PYTHON_INCLUDE_DIRS})
+target_link_libraries(pyime
+	im_enhance
+	${OpenCV_LIBS})
+set_target_properties(pyime
+	PROPERTIES
+		LIBRARY_OUTPUT_NAME im_enhance.so
+		PREFIX ""
+		SUFFIX ""
+	)
+install(TARGETS pyime
+	LIBRARY DESTINATION ${CATKIN_GLOBAL_PYTHON_DESTINATION}
+	)
 
