@@ -14,18 +14,18 @@ This is a ROS package of C++ library and Python bindings of image contrast enhan
 - Eigen 3
 - Python (Currently only supports 2.7)
 
-# Compilation
+# Compiling
 
 
 
-## Usage
+# Usage
 
-### ROS Node
+## ROS Node
 
-### Command Line Tools
+## Command Line Tools
 
-### C++
+## C++
 
-### Python
+## Python
 
 Todo
