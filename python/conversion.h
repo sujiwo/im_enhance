@@ -5,10 +5,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
+
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include "numpy/ndarrayobject.h"
-
-#define NUMPY_IMPORT_ARRAY_RETVAL
-
 
 static PyObject* opencv_error = 0;
 

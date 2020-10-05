@@ -12,7 +12,7 @@ find_package (PythonInterp REQUIRED)
 find_package (PythonLibs REQUIRED)
 find_package (Eigen3 REQUIRED)
 find_package (OpenMP REQUIRED)
-find_package (Boost REQUIRED COMPONENTS filesystem)
+find_package (Boost REQUIRED COMPONENTS filesystem python)
 find_package (SuiteSparse REQUIRED)
 
 find_package (MPI REQUIRED)

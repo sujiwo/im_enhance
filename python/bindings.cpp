@@ -29,7 +29,13 @@ static PyObject *method_im_test(PyObject *self, PyObject *args)
 static PyObject *method_autoAdjustGammaRGB(PyObject *self, PyObject *args)
 {
 	NDArrayConverter cvt;
-//	auto x = args->
+	PyObject *img_o;
+	PyArg_ParseTuple(args, "O", &img_o);
+	cv::Mat img_in, img_out;
+	img_in = cvt.toMat(img_o);
+	img_out = ice::autoAdjustGammaRGB(img_in);
+	PyObject *obj_np = cvt.toNDArray(img_out);
+	return obj_np;
 }
 
 

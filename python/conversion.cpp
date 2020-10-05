@@ -1,4 +1,5 @@
-# include "conversion.h"
+#include <iostream>
+#include "conversion.h"
 /*
  * The following conversion functions are taken/adapted from OpenCV's cv2.cpp file
  * inside modules/python/src2 folder.
@@ -158,7 +159,8 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
         failmsg("toMat: Object is not a numpy array");
     }
 
-    int typenum = PyArray_TYPE(o);
+    PyArrayObject *oarr = (PyArrayObject*)o;
+    int typenum = PyArray_TYPE(oarr);
     int type = typenum == NPY_UBYTE ? CV_8U : typenum == NPY_BYTE ? CV_8S :
                typenum == NPY_USHORT ? CV_16U : typenum == NPY_SHORT ? CV_16S :
                typenum == NPY_INT || typenum == NPY_LONG ? CV_32S :
@@ -170,7 +172,7 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
         failmsg("toMat: Data type = %d is not supported", typenum);
     }
 
-    int ndims = PyArray_NDIM(o);
+    int ndims = PyArray_NDIM(oarr);
 
     if(ndims >= CV_MAX_DIM)
     {
@@ -179,8 +181,8 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
 
     int size[CV_MAX_DIM+1];
     size_t step[CV_MAX_DIM+1], elemsize = CV_ELEM_SIZE1(type);
-    const npy_intp* _sizes = PyArray_DIMS(o);
-    const npy_intp* _strides = PyArray_STRIDES(o);
+    const npy_intp* _sizes = PyArray_DIMS(oarr);
+    const npy_intp* _strides = PyArray_STRIDES(oarr);
     bool transposed = false;
 
     for(int i = 0; i < ndims; i++)
@@ -213,14 +215,15 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
         failmsg("toMat: Object has more than 2 dimensions");
     }
 
-    m = Mat(ndims, size, type, PyArray_DATA(o), step);
+    m = Mat(ndims, size, type, PyArray_DATA(oarr), step);
 
     if( m.data )
     {
-        m.u->refcount = *refcountFromPyObject(o);
+//        m.u->refcount = *refcountFromPyObject(o);
         m.addref(); // protect the original numpy array from deallocation
                     // (since Mat destructor will decrement the reference counter)
     };
+
     m.allocator = &g_numpyAllocator;
 
     if( transposed )
@@ -244,6 +247,8 @@ PyObject* NDArrayConverter::toNDArray(const cv::Mat& m)
         m.copyTo(temp);
         p = &temp;
     }
-    p->addref();
-    return pyObjectFromRefcount(&(p->u->refcount));
+//    p->addref();
+    PyObject *o = (PyObject*)p->u->userdata;
+    Py_INCREF(o);
+    return o;
 }
