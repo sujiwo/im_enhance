@@ -27,12 +27,22 @@ cv::Mat toIlluminatiInvariant (const cv::Mat &imageRgb, const float alpha);
  * high clip = 0.9999999
  */
 
+/*
+ * Default values for MSRCP
+ */
+const float
+	msrcp_sigma1 = 15.0,
+	msrcp_sigma2 = 80.0,
+	msrcp_sigma3 = 250.0,
+	msrcp_lowClip = 0.01,
+	msrcp_highClip = 0.99;
+
 cv::Mat multiScaleRetinexCP(const cv::Mat &rgbImage,
-	const float sigma1=15.0,
-	const float sigma2=80.0,
-	const float sigma3=250.0,
-	const float lowClip=0.01,
-	const float highClip=0.99);
+	const float sigma1=msrcp_sigma1,
+	const float sigma2=msrcp_sigma2,
+	const float sigma3=msrcp_sigma3,
+	const float lowClip=msrcp_lowClip,
+	const float highClip=msrcp_highClip);
 
 /*
  * Dynamic Histogram Equalization (choice #3)

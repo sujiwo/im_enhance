@@ -41,7 +41,20 @@ static PyObject *method_autoAdjustGammaRGB(PyObject *self, PyObject *args)
 
 static PyObject *method_multiScaleRetinexCP(PyObject *self, PyObject *args)
 {
+	NDArrayConverter cvt;
+	PyObject *img_o;
+	double sigma1=ice::msrcp_sigma1,
+			sigma2=ice::msrcp_sigma2,
+			sigma3=ice::msrcp_sigma3,
+			lowClip=ice::msrcp_lowClip,
+			highClip=ice::msrcp_highClip;
 
+	PyArg_ParseTuple(args, "O|ddddd", &img_o);
+	cv::Mat img_in, img_out;
+	img_in = cvt.toMat(img_o);
+	img_out = ice::multiScaleRetinexCP(img_in);
+	PyObject *obj_np = cvt.toNDArray(img_out);
+	return obj_np;
 }
 
 
