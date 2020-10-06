@@ -49,10 +49,10 @@ static PyObject *method_multiScaleRetinexCP(PyObject *self, PyObject *args)
 			lowClip=ice::msrcp_lowClip,
 			highClip=ice::msrcp_highClip;
 
-	PyArg_ParseTuple(args, "O|ddddd", &img_o);
+	PyArg_ParseTuple(args, "O|ddddd", &img_o, &sigma1, &sigma2, &sigma3, &lowClip, &highClip);
 	cv::Mat img_in, img_out;
 	img_in = cvt.toMat(img_o);
-	img_out = ice::multiScaleRetinexCP(img_in);
+	img_out = ice::multiScaleRetinexCP(img_in, sigma1, sigma2, sigma3, lowClip, highClip);
 	PyObject *obj_np = cvt.toNDArray(img_out);
 	return obj_np;
 }
@@ -60,13 +60,27 @@ static PyObject *method_multiScaleRetinexCP(PyObject *self, PyObject *args)
 
 static PyObject *method_dynamicHistogramEqualization(PyObject *self, PyObject *args)
 {
-
+	NDArrayConverter cvt;
+	PyObject *img_o;
+	PyArg_ParseTuple(args, "O", &img_o);
+	cv::Mat img_in, img_out;
+	img_in = cvt.toMat(img_o);
+	img_out = ice::autoAdjustGammaRGB(img_in);
+	PyObject *obj_np = cvt.toNDArray(img_out);
+	return obj_np;
 }
 
 
 static PyObject *method_exposureFusion(PyObject *self, PyObject *args)
 {
-
+	NDArrayConverter cvt;
+	PyObject *img_o;
+	PyArg_ParseTuple(args, "O", &img_o);
+	cv::Mat img_in, img_out;
+	img_in = cvt.toMat(img_o);
+	img_out = ice::exposureFusion(img_in);
+	PyObject *obj_np = cvt.toNDArray(img_out);
+	return obj_np;
 }
 
 

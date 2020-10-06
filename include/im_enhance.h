@@ -47,7 +47,8 @@ cv::Mat multiScaleRetinexCP(const cv::Mat &rgbImage,
 /*
  * Dynamic Histogram Equalization (choice #3)
  */
-cv::Mat dynamicHistogramEqualization(const cv::Mat &rgbImage, const float alpha=0.5);
+const float dhe_alpha = 0.5;
+cv::Mat dynamicHistogramEqualization(const cv::Mat &rgbImage, const float alpha=dhe_alpha);
 
 /*
  * Exposure Fusion (choice #4)
