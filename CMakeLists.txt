@@ -89,7 +89,7 @@ endif()
 
 # Python extension
 add_library(pyime SHARED
-	python/bindings.cpp
+	python/binding.cpp
 	python/conversion.cpp
 	)
 target_include_directories(pyime
