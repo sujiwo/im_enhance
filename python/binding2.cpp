@@ -36,9 +36,8 @@ int add_vect(const std::vector<int> &vs)
 	return s;
 }
 
-int test_mat()
+int test_mat(cv::Mat &M)
 {
-	cv::Mat M;
 	return M.rows;
 }
 
@@ -52,4 +51,6 @@ PYBIND11_MODULE(im_enhance, mod) {
 	mod.def("add", &add, "Add two numbers");
 
 	mod.def("add_vect", &add_vect, "add a list of integers");
+
+	mod.def("test_mat", &test_mat, "returns number of rows");
 }
