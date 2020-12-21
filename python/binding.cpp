@@ -1,101 +1,67 @@
-/*
- * mod.cpp
- *
- *  Created on: Jun 24, 2020
- *      Author: sujiwo
- */
-
-#include <Python.h>
 #include <iostream>
-#include "conversion.h"
+#include <vector>
+#include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
+
+#include <opencv2/core.hpp>
+
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#include "numpy/ndarrayobject.h"
+
 #include "im_enhance.h"
+#include "cv_conversion.h"
+
+using namespace std;
+namespace py = pybind11;
 
 
-// https://realpython.com/build-python-c-extension-module/
-
-void im_test()
+void module_init()
 {
-	std::cout << "Hello python\n";
+	import_array();
 }
 
 
-static PyObject *method_im_test(PyObject *self, PyObject *args)
+int add(int i, int j)
 {
-	std::cout << "ICE printout\n";
-	Py_RETURN_NONE;
+	return i + j;
+}
+
+int add_vect(const std::vector<int> &vs)
+{
+	int s=0;
+
+	for (auto v: vs) {
+		s+=v;
+	}
+	return s;
+}
+
+int test_mat(cv::Mat &M)
+{
+	return M.rows;
+}
+
+void test_kp(cv::KeyPoint &k)
+{
+	std::cout << k.pt.x << ", " << k.pt.y << std::endl;
 }
 
 
-static PyObject *method_autoAdjustGammaRGB(PyObject *self, PyObject *args)
-{
-	NDArrayConverter cvt;
-	PyObject *img_o;
-	PyArg_ParseTuple(args, "O", &img_o);
-	cv::Mat img_in, img_out;
-	img_in = cvt.toMat(img_o);
-	img_out = ice::autoAdjustGammaRGB(img_in);
-	PyObject *obj_np = cvt.toNDArray(img_out);
-	return obj_np;
-}
+PYBIND11_MODULE(im_enhance, mod) {
 
+	module_init();
 
-static PyObject *method_multiScaleRetinexCP(PyObject *self, PyObject *args)
-{
-	NDArrayConverter cvt;
-	PyObject *img_o;
-	double sigma1=ice::msrcp_sigma1,
-			sigma2=ice::msrcp_sigma2,
-			sigma3=ice::msrcp_sigma3,
-			lowClip=ice::msrcp_lowClip,
-			highClip=ice::msrcp_highClip;
+	mod.doc() = "im_enhance is a python module to image contrast enhancement";
 
-	PyArg_ParseTuple(args, "O|ddddd", &img_o, &sigma1, &sigma2, &sigma3, &lowClip, &highClip);
-	cv::Mat img_in, img_out;
-	img_in = cvt.toMat(img_o);
-	img_out = ice::multiScaleRetinexCP(img_in, sigma1, sigma2, sigma3, lowClip, highClip);
-	PyObject *obj_np = cvt.toNDArray(img_out);
-	return obj_np;
-}
+	mod.def("add", &add, "Add two numbers");
 
+	mod.def("add_vect", &add_vect, "add a list of integers");
 
-static PyObject *method_dynamicHistogramEqualization(PyObject *self, PyObject *args)
-{
-	NDArrayConverter cvt;
-	PyObject *img_o;
-	PyArg_ParseTuple(args, "O", &img_o);
-	cv::Mat img_in, img_out;
-	img_in = cvt.toMat(img_o);
-	img_out = ice::autoAdjustGammaRGB(img_in);
-	PyObject *obj_np = cvt.toNDArray(img_out);
-	return obj_np;
-}
+	mod.def("test_mat", &test_mat, "returns number of rows");
 
+	mod.def("test_kp", &test_kp, "prints position of the keypoint");
 
-static PyObject *method_exposureFusion(PyObject *self, PyObject *args)
-{
-	NDArrayConverter cvt;
-	PyObject *img_o;
-	PyArg_ParseTuple(args, "O", &img_o);
-	cv::Mat img_in, img_out;
-	img_in = cvt.toMat(img_o);
-	img_out = ice::exposureFusion(img_in);
-	PyObject *obj_np = cvt.toNDArray(img_out);
-	return obj_np;
-}
-
-
-static PyMethodDef im_enhanceMethods[] = {
-    {"im_test", method_im_test, METH_NOARGS, "Test Method"},
-	{"autoAdjustGammaRGB", method_autoAdjustGammaRGB, METH_VARARGS, "Automatic gamma adjusment"},
-	{"multiScaleRetinexCP", method_multiScaleRetinexCP, METH_VARARGS, "Multi-scale Retinex with Color Preservation"},
-	{"dynamicHistogramEqualization", method_dynamicHistogramEqualization, METH_VARARGS, "Dynamic Histogram Equalization"},
-	{"exposureFusion", method_exposureFusion, METH_VARARGS, "Exposure Fusion"},
-    {NULL, NULL, 0, NULL}
-};
-
-
-PyMODINIT_FUNC
-initim_enhance(void)
-{
-	(void) Py_InitModule("im_enhance", im_enhanceMethods);
+	mod.def("autoAdjustGammaRGB", &ice::autoAdjustGammaRGB, "Automatic gamma adjusment");
+	mod.def("exposureFusion", &ice::exposureFusion, "Exposure Fusion");
 }

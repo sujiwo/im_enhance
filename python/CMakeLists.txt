@@ -4,7 +4,7 @@ find_package(pybind11_catkin REQUIRED)
 # Python extension
 add_library ( py_im_enhance
 	MODULE
-		binding2.cpp
+		binding.cpp
 		cv_conversion.cpp )
 		
 target_include_directories( py_im_enhance
