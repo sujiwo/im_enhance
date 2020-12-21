@@ -19,7 +19,7 @@ find_package (MPI REQUIRED)
 
 message("SuiteSparse: ${SUITESPARSE_LIBRARIES}")
 
-find_package (catkin COMPONENTS
+find_package (catkin REQUIRED COMPONENTS
 	roscpp
 	sensor_msgs
 	cv_bridge
@@ -87,25 +87,5 @@ if (catkin_FOUND)
 #	catkin_python_setup()
 endif()
 
-# Python extension
-add_library(pyime SHARED
-	python/binding.cpp
-	python/conversion.cpp
-	)
-target_include_directories(pyime
-	PUBLIC
-		include
-		${PYTHON_INCLUDE_DIRS})
-target_link_libraries(pyime
-	im_enhance
-	${OpenCV_LIBS})
-set_target_properties(pyime
-	PROPERTIES
-		LIBRARY_OUTPUT_NAME im_enhance.so
-		PREFIX ""
-		SUFFIX ""
-	)
-install(TARGETS pyime
-	LIBRARY DESTINATION ${CATKIN_GLOBAL_PYTHON_DESTINATION}
-	)
+add_subdirectory ( python )
 
