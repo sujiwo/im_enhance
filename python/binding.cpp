@@ -18,7 +18,7 @@ namespace py = pybind11;
 
 void module_init()
 {
-	import_array();
+	_import_array();
 }
 
 

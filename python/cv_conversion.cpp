@@ -102,6 +102,7 @@ struct pyopencv_KeyPoint_t
 	cv::KeyPoint v;
 };
 
+#if PY_MAJOR_VERSION==2
 static PyTypeObject pyopencv_KeyPoint_Type =
 {
     PyObject_HEAD_INIT(&PyType_Type)
@@ -109,6 +110,16 @@ static PyTypeObject pyopencv_KeyPoint_Type =
 	"cv2.KeyPoint",
 	sizeof(pyopencv_KeyPoint_t)
 };
+#elif PY_MAJOR_VERSION==3
+static PyTypeObject pyopencv_KeyPoint_Type =
+{
+    PyVarObject_HEAD_INIT(&PyType_Type, 0)
+	"cv2.KeyPoint",
+	sizeof(pyopencv_KeyPoint_t)
+};
+#else
+#error "Unsupported Python version"
+#endif
 
 bool
 type_caster<cv::KeyPoint>::load(handle obj, bool)
