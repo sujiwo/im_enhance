@@ -95,4 +95,34 @@ type_caster<cv::Mat>::cast(const cv::Mat& mat, return_value_policy, handle defva
 	return array(buffer_info( mat.data,  elemsize,  format, dim, bufferdim, strides )).release();
 }
 
+
+struct pyopencv_KeyPoint_t
+{
+	PyObject_HEAD
+	cv::KeyPoint v;
+};
+
+static PyTypeObject pyopencv_KeyPoint_Type =
+{
+    PyObject_HEAD_INIT(&PyType_Type)
+	0,
+	"cv2.KeyPoint",
+	sizeof(pyopencv_KeyPoint_t)
+};
+
+bool
+type_caster<cv::KeyPoint>::load(handle obj, bool)
+{
+	value = ((pyopencv_KeyPoint_t*)obj.ptr())->v;
+	return true;
+}
+
+handle
+type_caster<cv::KeyPoint>::cast(const cv::KeyPoint& kp, return_value_policy, handle defval)
+{
+	pyopencv_KeyPoint_t *rkp = PyObject_NEW(pyopencv_KeyPoint_t, &pyopencv_KeyPoint_Type);
+	new (&rkp->v)cv::KeyPoint(kp);
+	return handle((PyObject*)rkp);
+}
+
 }}
