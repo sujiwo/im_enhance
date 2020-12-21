@@ -14,7 +14,7 @@
 
 using namespace std;
 namespace py = pybind11;
-
+using namespace pybind11::literals;
 
 void module_init()
 {
@@ -29,5 +29,22 @@ PYBIND11_MODULE(im_enhance, mod) {
 	mod.doc() = "im_enhance is a python module to image contrast enhancement";
 
 	mod.def("autoAdjustGammaRGB", &ice::autoAdjustGammaRGB, "Automatic gamma adjusment");
+
 	mod.def("exposureFusion", &ice::exposureFusion, "Exposure Fusion");
+
+	mod.def("multiScaleRetinexCP",
+		&ice::multiScaleRetinexCP,
+		"Multi-scale Retinex with Color Preservation",
+		"bgrImage"_a,
+		"sigma1"_a = ice::msrcp_sigma1,
+		"sigma2"_a = ice::msrcp_sigma2,
+		"sigma3"_a = ice::msrcp_sigma3,
+		"lowClip"_a = ice::msrcp_lowClip,
+		"highClip"_a = ice::msrcp_highClip);
+
+	mod.def("dynamicHistogramEqualization",
+		&ice::dynamicHistogramEqualization,
+		"Dynamic Histogram Equalization",
+		"bgrImage"_a,
+		"alpha"_a = ice::dhe_alpha);
 }
