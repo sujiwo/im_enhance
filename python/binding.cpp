@@ -22,45 +22,11 @@ void module_init()
 }
 
 
-int add(int i, int j)
-{
-	return i + j;
-}
-
-int add_vect(const std::vector<int> &vs)
-{
-	int s=0;
-
-	for (auto v: vs) {
-		s+=v;
-	}
-	return s;
-}
-
-int test_mat(cv::Mat &M)
-{
-	return M.rows;
-}
-
-void test_kp(cv::KeyPoint &k)
-{
-	std::cout << k.pt.x << ", " << k.pt.y << std::endl;
-}
-
-
 PYBIND11_MODULE(im_enhance, mod) {
 
 	module_init();
 
 	mod.doc() = "im_enhance is a python module to image contrast enhancement";
-
-	mod.def("add", &add, "Add two numbers");
-
-	mod.def("add_vect", &add_vect, "add a list of integers");
-
-	mod.def("test_mat", &test_mat, "returns number of rows");
-
-	mod.def("test_kp", &test_kp, "prints position of the keypoint");
 
 	mod.def("autoAdjustGammaRGB", &ice::autoAdjustGammaRGB, "Automatic gamma adjusment");
 	mod.def("exposureFusion", &ice::exposureFusion, "Exposure Fusion");

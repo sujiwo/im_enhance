@@ -94,7 +94,7 @@ cv::Mat autoAdjustGammaRGB (const cv::Mat &rgbImg, cv::InputArray mask)
 	cv::Mat res;
 	cv::Mat monoImg;
 
-	cv::cvtColor (rgbImg, monoImg, CV_BGR2GRAY);
+	cv::cvtColor (rgbImg, monoImg, cv::COLOR_BGR2GRAY);
 
 	float gamma;
 	autoAdjustGammaMono (monoImg, &gamma, mask.getMat());
