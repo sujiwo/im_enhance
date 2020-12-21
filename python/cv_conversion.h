@@ -10,6 +10,7 @@
 
 #include <pybind11/buffer_info.h>
 #include <pybind11/cast.h>
+#include <pybind11/numpy.h>
 #include <opencv2/core.hpp>
 
 
@@ -21,6 +22,11 @@ struct type_caster<cv::Mat> {
 public:
 	PYBIND11_TYPE_CASTER(cv::Mat, _("numpy.ndarray"));
 
+	//! 1. cast numpy.ndarray to cv::Mat
+	bool load(handle obj, bool);
+
+	//! 2. cast cv::Mat to numpy.ndarray
+	static handle cast(const cv::Mat& mat, return_value_policy, handle defval);
 };
 
 }}
