@@ -8,6 +8,7 @@
 #ifndef IM_ENHANCE_CV_CONVERSION_H_
 #define IM_ENHANCE_CV_CONVERSION_H_
 
+#include <string>
 #include <pybind11/buffer_info.h>
 #include <pybind11/cast.h>
 #include <pybind11/numpy.h>
