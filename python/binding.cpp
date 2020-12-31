@@ -32,14 +32,10 @@ PYBIND11_MODULE(im_enhance, mod) {
 
 	mod.doc() = "im_enhance is a python module to image contrast enhancement";
 
-<<<<<<< HEAD
-	mod.def("autoAdjustGammaRGB", &ice::autoAdjustGammaRGB, "Automatic gamma adjusment");
-=======
 	mod.def("autoAdjustGammaRGB", &_iceWrapAutoGammaRGB,
 		"Automatic gamma adjusment",
 		py::arg("source"),
 		py::arg("mask")=cv::Mat());
->>>>>>> pybind11
 
 	mod.def("exposureFusion", &ice::exposureFusion, "Exposure Fusion");
 
