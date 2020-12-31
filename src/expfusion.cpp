@@ -284,6 +284,7 @@ cv::Mat exposureFusion(const cv::Mat &rgbImage)
 	solver.analyzePattern(A);
 	solver.factorize(A);
 	Eigen::VectorXd out = solver.solve(tin);
+	Eigen::VectorXf outf = out.cast<float>();
 
 /*
 	Eigen::MUMPSLDLT<decltype(A), Eigen::Upper> solver;
@@ -293,7 +294,7 @@ cv::Mat exposureFusion(const cv::Mat &rgbImage)
 */
 
 	Matf t_vec;
-	cv::eigen2cv(out, t_vec);
+	cv::eigen2cv(outf, t_vec);
 
 	Matf Tx = t_vec.reshape(1, imageSmooth.cols).t();
 	cv::resize(Tx, Tx, rgbFloat.size(), 0, 0, cv::INTER_CUBIC);
@@ -342,7 +343,7 @@ cv::Mat exposureFusion(const cv::Mat &rgbImage)
 
 	// XXX: Boost's Brent Method implementation is different from Numpy
 	auto fmin = boost::math::tools::brent_find_minima(funEntropy, 1.0, 7.0, numeric_limits<double>::digits10);
-	auto J = applyK(rgbFloat, fmin.first, a_, b_) - 0.01;
+	Matf3 J = applyK(rgbFloat, fmin.first, a_, b_) - 0.01;
 
 	// Combine Tx
 	Matf3 T_all;
@@ -350,7 +351,8 @@ cv::Mat exposureFusion(const cv::Mat &rgbImage)
 	cv::pow(T_all, lambda, T_all);
 
 	Matf3 I2 = rgbFloat.mul(T_all);
-	Matf3 J2 = J.mul(cv::Vec3f(1,1,1)-T_all);
+	Matf3 V = cv::Vec3f(1,1,1)-T_all;
+	Matf3 J2 = J.mul(V);
 
 	T_all.release();
 	Matf3 result = (I2 + J2)*255;
