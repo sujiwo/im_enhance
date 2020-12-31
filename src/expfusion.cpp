@@ -351,7 +351,7 @@ cv::Mat exposureFusion(const cv::Mat &rgbImage)
 	cv::pow(T_all, lambda, T_all);
 
 	Matf3 I2 = rgbFloat.mul(T_all);
-	Matf3 V = cv::Vec3f(1,1,1)-T_all;
+	Matf3 V = T_all.clone().setTo(cv::Vec3f(1,1,1)) - T_all;
 	Matf3 J2 = J.mul(V);
 
 	T_all.release();
