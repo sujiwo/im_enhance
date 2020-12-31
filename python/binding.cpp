@@ -22,12 +22,20 @@ void module_init()
 }
 
 
+cv::Mat _iceWrapAutoGammaRGB(const cv::Mat &src, const cv::Mat &mask=cv::Mat())
+{ return ice::autoAdjustGammaRGB(src, mask); }
+
+
 PYBIND11_MODULE(im_enhance, mod) {
 
 	module_init();
 
 	mod.doc() = "im_enhance is a python module to image contrast enhancement";
 
-	mod.def("autoAdjustGammaRGB", &ice::autoAdjustGammaRGB, "Automatic gamma adjusment");
+	mod.def("autoAdjustGammaRGB", &_iceWrapAutoGammaRGB,
+		"Automatic gamma adjusment",
+		py::arg("source"),
+		py::arg("mask")=cv::Mat());
+
 	mod.def("exposureFusion", &ice::exposureFusion, "Exposure Fusion");
 }
