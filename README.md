@@ -13,6 +13,8 @@ This is a ROS package of C++ library and Python bindings of image contrast enhan
 - OpenCV (>=3.2.0)
 - Eigen 3
 - Python (Currently only supports 2.7)
+- Suitesparse
+- pybind11 from ROS
 
 # Compiling
 
