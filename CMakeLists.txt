@@ -27,6 +27,10 @@ find_package (catkin REQUIRED COMPONENTS
 )
 
 find_package (CUDA QUIET)
+if (CUDA_cusparse_LIBRARY)
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAS_CUSPARSE=1")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAS_CUSPARSE=1")
+endif()
 
 if (OPENMP_FOUND)
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")

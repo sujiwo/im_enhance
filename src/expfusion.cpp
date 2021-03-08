@@ -11,7 +11,10 @@
 #include "matutils.h"
 #include "timer.h"
 #include "npy.hpp"
+
+#ifdef HAS_CUSPARSE
 #include "cusparse_wrapper.h"
+#endif
 
 
 using namespace std;
