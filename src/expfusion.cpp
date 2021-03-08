@@ -11,6 +11,7 @@
 #include "matutils.h"
 #include "timer.h"
 #include "npy.hpp"
+#include "cusparse_wrapper.h"
 
 
 using namespace std;

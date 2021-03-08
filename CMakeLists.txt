@@ -26,6 +26,8 @@ find_package (catkin REQUIRED COMPONENTS
 	image_transport
 )
 
+find_package (CUDA QUIET)
+
 if (OPENMP_FOUND)
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -45,6 +47,7 @@ include_directories(
 	${catkin_INCLUDE_DIRS}
 	${SUITESPARSE_INCLUDE_DIRS}
 	${MPI_CXX_INCLUDE_DIRS}
+	${CUDA_INCLUDE_DIRS}
 )
 
 add_library(im_enhance
