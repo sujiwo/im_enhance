@@ -66,6 +66,8 @@ target_link_libraries(
 		${OpenCV_LIBS}
 		${SUITESPARSE_LIBRARIES}
 		${MPI_CXX_LIBRARIES}
+		${CUDA_cusparse_LIBRARY}
+		${CUDA_CUDART_LIBRARY}
 )
 
 install(

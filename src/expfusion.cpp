@@ -81,8 +81,8 @@ spdiags(const Matf &_Data, const std::vector<int> &_diags, int m, int n)
 }
 
 
-template<typename DstScalar, typename SrcScalar>
-Eigen::SparseMatrix<DstScalar>
+template<typename DstScalar, typename SrcScalar, int _matOptions=0>
+Eigen::SparseMatrix<DstScalar, _matOptions>
 spdiags(const std::vector<cv::Mat_<SrcScalar>> &_Data, const std::vector<int> &diags, int m, int n)
 {
 	std::vector<Eigen::Triplet<DstScalar>> triplets;
