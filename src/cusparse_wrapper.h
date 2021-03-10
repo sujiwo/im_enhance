@@ -67,18 +67,31 @@ void gpu_sparse_solve(Spf &A, const cv::Mat &B, cv::Mat &X)
 	csrsv2Info_t info;
 	int pBufferSize;
 	void *pBuffer;
+	const float alpha = 1.0;
+	int structural_zero;
 
 	cusparseCreateMatDescr(&descrA);
 	cusparseSetMatIndexBase(descrA, CUSPARSE_INDEX_BASE_ZERO);
 	cusparseSetMatType(descrA, CUSPARSE_MATRIX_TYPE_GENERAL);
 
+	// Initialize X
+	X = cv::Mat::zeros(A.rows(), 1, CV_32F);
+
 	cusparseCreateCsrsv2Info(&info);
 
-	cusparseScsrsv2_bufferSize(ctx, CUSPARSE_OPERATION_NON_TRANSPOSE, A.rows(), A.nonZeros(), descrA, A.valuePtr(), A.outerIndexPtr(), A.innerIndexPtr(), info, &pBufferSize);
+	cusparseScsrsv2_bufferSize(ctx, CUSPARSE_OPERATION_NON_TRANSPOSE,
+		A.rows(), A.nonZeros(), descrA, A.valuePtr(), A.outerIndexPtr(), A.innerIndexPtr(),
+		info, &pBufferSize);
 	cudaMalloc((void**)&pBuffer, pBufferSize);
 	pBuffer = malloc(pBufferSize);
-	cusparseScsrsv2_analysis(ctx, CUSPARSE_OPERATION_NON_TRANSPOSE, A.rows(), A.nonZeros(), descrA, A.valuePtr(), A.outerIndexPtr(), A.innerIndexPtr(), info,  CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer);
-//	cusparseScsrsv2_solve
+	cusparseScsrsv2_analysis(ctx, CUSPARSE_OPERATION_NON_TRANSPOSE,
+		A.rows(), A.nonZeros(), descrA, A.valuePtr(), A.outerIndexPtr(), A.innerIndexPtr(),
+		info,  CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer);
+
+	cusparseScsrsv2_solve(ctx, CUSPARSE_OPERATION_NON_TRANSPOSE, A.rows(), A.nonZeros(),
+		&alpha, descrA, A.valuePtr(), A.outerIndexPtr(), A.innerIndexPtr(), info,
+		(float*)B.data, (float*)X.data,
+		CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer);
 
 	cudaFree(pBuffer);
 	cusparseDestroyCsrsv2Info(info);
